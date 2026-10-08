@@ -1,17 +1,4 @@
 // src/security/passwordAlgorithm.ts
-// ClimaticHash - a custom password-securing algorithm.
-//
-// Design (new algorithm submitted for Module 3):
-//   1. SALT   : 16 random bytes unique per password.
-//   2. SCRAMBLE: a deterministic byte-swap phase driven by the salt value,
-//      preventing rainbow tables and making every stored hash input-unique.
-//   3. STRETCH : N iterative SHA-256 rounds (key stretching) to slow brute force.
-//   4. PEPPER : an application-wide secret mixed into every round, so a leaked
-//      database alone is not enough to crack hashes offline.
-//   5. VERIFY : constant-time comparison to block timing side channels.
-//
-// The algorithm is self-contained (no WebCrypto dependence) so it works on
-// both secure and non-secure contexts.
 
 export interface PasswordHash {
   saltHex: string;
@@ -31,11 +18,6 @@ const PEPPER_KEY = 'climaticedge-hash-pepper';
 export const STORAGE_KEY = 'climaticedge-users';
 export const SESSION_KEY = 'climaticedge-session';
 
-// Pepper resolution: an application-wide secret mixed into every round.
-// It is never hardcoded in source. Order of preference:
-//   1. REACT_APP_HASH_PEPPER from the (gitignored) .env file.
-//   2. A cryptographically random 32-byte secret generated at runtime and
-//      kept in the browser profile, so no fixed value is shipped in the bundle.
 let cachedPepper: string | null = null;
 
 export function getDefaultPepper(): string {
@@ -66,8 +48,6 @@ export function getDefaultPepper(): string {
   return pepper;
 }
 
-// ---- helpers -------------------------------------------------------------
-
 function toHex(bytes: Uint8Array): string {
   let hex = '';
   for (let i = 0; i < bytes.length; i++) {
@@ -86,8 +66,6 @@ function fromHex(hex: string): Uint8Array {
 
 const encoder = new TextEncoder();
 
-// Cryptographically secure random when available; fallback PRNG otherwise so
-// the demo also works on plain HTTP (non-secure) contexts.
 function randomBytes(length: number): Uint8Array {
   const bytes = new Uint8Array(length);
   if (typeof globalThis.crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
@@ -101,8 +79,6 @@ function randomBytes(length: number): Uint8Array {
   }
   return bytes;
 }
-
-// ---- pure-JS SHA-256 (no WebCrypto / secure-context requirement) ----------
 
 const K = [
   0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1,
@@ -192,7 +168,6 @@ function scramble(input: Uint8Array, salt: Uint8Array): Uint8Array {
   return out;
 }
 
-// Phase 2 - iterative key stretching with an app-level pepper mixed each round.
 async function stretch(
   base: Uint8Array,
   salt: Uint8Array,
@@ -287,8 +262,6 @@ export function registerUser(
   return user;
 }
 
-// Synchronous wrapper for the async algorithm so the login page can use it
-// easily in event handlers (the pure-JS SHA-256 is already synchronous).
 export function hashPasswordSync(
   password: string,
   rounds: number = DEFAULT_ROUNDS,
