@@ -86,7 +86,6 @@ const HomePage: React.FC = () => {
         setNewsError(err.message);
       });
 
-    // Weather - free Open-Meteo API, no key needed. All cities in one request.
     const lat = CITIES.map((c) => c[1]).join(',');
     const lon = CITIES.map((c) => c[2]).join(',');
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`;
