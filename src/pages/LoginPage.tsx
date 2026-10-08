@@ -18,7 +18,6 @@ const LoginPage = () => {
   const [confirm, setConfirm] = useState('');
   const [message, setMessage] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
 
-  // Already authenticated? Go straight to the app.
   useEffect(() => {
     if (localStorage.getItem(SESSION_KEY)) {
       navigate('/');

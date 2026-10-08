@@ -30,6 +30,7 @@ const WEATHER_ICON: Record<number, string> = {
   95: '⛈️', 96: '⛈️', 99: '⛈️',
 };
 
+
 const DEFAULT_CITIES = ['New York', 'London', 'Tokyo', 'Paris', 'Sydney', 'Mumbai'];
 
 const WeatherWidget = () => {
