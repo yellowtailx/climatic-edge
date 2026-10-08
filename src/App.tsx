@@ -9,7 +9,6 @@ import NewsPage from './pages/NewsPage';
 import LoginPage from './pages/LoginPage';
 import { SESSION_KEY } from './security/passwordAlgorithm';
 
-// Only logged-in users can view the app; otherwise redirect to the login gate.
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   if (!localStorage.getItem(SESSION_KEY)) {
     return <Navigate to="/login" replace />;
