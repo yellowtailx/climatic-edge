@@ -11,8 +11,11 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      'process/browser': require.resolve('process/browser.js'),
+    },
     fallback: {
-      process: require.resolve('process/browser'),
+      process: require.resolve('process/browser.js'),
     },
   },
   module: {
