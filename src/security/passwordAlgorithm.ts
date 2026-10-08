@@ -41,7 +41,6 @@ export function getDefaultPepper(): string {
     try {
       localStorage.setItem(PEPPER_KEY, pepper);
     } catch {
-      // non-persistent storage unavailable; keep this profile value in memory
     }
   }
   cachedPepper = pepper;
