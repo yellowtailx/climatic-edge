@@ -24,6 +24,7 @@ const NewsWidget = () => {
   const fetchPage = useCallback(async (startOffset: number, append: boolean): Promise<boolean | null> => {
     const url = `https://api.spaceflightnewsapi.net/v4/articles/?limit=${PAGE_SIZE}&offset=${startOffset}&ordering=-published_at`;
 
+    
     try {
       const response = await fetch(url);
       if (!response.ok) {
